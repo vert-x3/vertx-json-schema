@@ -11,7 +11,6 @@ import io.vertx.ext.json.schema.generic.SchemaRouterImpl;
 
 import java.util.List;
 
-@VertxGen
 public interface SchemaRouter {
 
   /**

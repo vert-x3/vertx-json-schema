@@ -5,8 +5,8 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 import io.vertx.ext.json.schema.*;
 
 import java.util.*;
@@ -75,8 +75,8 @@ public class SchemaImpl extends BaseMutableStateValidator implements Schema {
 
   @Override
   public Future<Void> validateAsync(Object in) {
-    if (log.isDebugEnabled()) log.debug("Starting async validation for schema {} and input {}", schema, in);
     if (isSync()) return validateSyncAsAsync(in);
+    if (log.isDebugEnabled()) log.trace(String.format("Starting async validation for schema %s and input %s", schema, in));
 
     List<Future> futures = new ArrayList<>();
     for (Validator validator : validators) {
@@ -101,7 +101,7 @@ public class SchemaImpl extends BaseMutableStateValidator implements Schema {
 
   @Override
   public void validateSync(Object in) throws ValidationException, NoSyncValidationException {
-    if (log.isDebugEnabled()) log.debug("Starting sync validation for schema {} and input {}", schema, in);
+    if (log.isDebugEnabled()) log.trace(String.format("Starting sync validation for schema %s and input %s", schema, in));
     this.checkSync();
     for (Validator validator : validators) {
       try {
@@ -139,8 +139,8 @@ public class SchemaImpl extends BaseMutableStateValidator implements Schema {
   void registerReferredSchema(RefSchema ref) {
       referringSchemas.add(ref);
       if (log.isDebugEnabled()) {
-        log.debug("Ref schema {} reefers to schema {}",  ref, this);
-        log.debug("Ref schemas that refeers to {}: {}", this, this.referringSchemas.size());
+        log.trace(String.format("Ref schema %s reefers to schema %s",  ref, this));
+        log.trace(String.format("Ref schemas that refeers to %s: %s", this, this.referringSchemas.size()));
       }
       // This is a trick to solve the circular references.
       // 1. for each ref that reefers to this schema we propagate isSync = true to the upper levels.
