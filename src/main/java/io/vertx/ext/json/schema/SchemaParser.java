@@ -7,7 +7,6 @@ import io.vertx.core.json.pointer.JsonPointer;
 import java.net.URI;
 import java.util.function.Predicate;
 
-@VertxGen
 public interface SchemaParser {
 
   //TODO add parse from file/url

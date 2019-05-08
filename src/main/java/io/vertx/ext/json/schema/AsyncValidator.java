@@ -3,7 +3,6 @@ package io.vertx.ext.json.schema;
 import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.Future;
 
-@VertxGen
 public interface AsyncValidator extends Validator {
 
   /**

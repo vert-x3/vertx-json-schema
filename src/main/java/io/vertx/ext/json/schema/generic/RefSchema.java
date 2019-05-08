@@ -4,8 +4,8 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.vertx.core.impl.logging.Logger;
+import io.vertx.core.impl.logging.LoggerFactory;
 
 import java.net.URI;
 
@@ -25,7 +25,7 @@ public class RefSchema extends SchemaImpl {
     try {
       String unparsedUri = schema.getString("$ref");
       refPointer = URIUtils.createJsonPointerFromURI(URI.create(unparsedUri));
-      if (log.isDebugEnabled()) log.debug("Parsed {} ref for schema {}", refPointer, schema);
+      if (log.isDebugEnabled()) log.debug(String.format("Parsed %s ref for schema %s", refPointer, schema));
     } catch (NullPointerException e) {
       throw new SchemaException(schema, "Null $ref keyword", e);
     } catch (ClassCastException e) {
@@ -50,7 +50,7 @@ public class RefSchema extends SchemaImpl {
           s -> {
             if (s == null) return Future.failedFuture(createException("Cannot resolve reference " + this.refPointer.toURI(), "$ref", in));
             registerCachedSchema(s);
-            if (log.isDebugEnabled()) log.debug("Solved ref {} as {} in ref schema {}", refPointer, s.getScope(), this.getScope());
+            if (log.isDebugEnabled()) log.debug(String.format("Solved ref %s as %s", refPointer, s.getScope()));
             if (s instanceof RefSchema) {
               // We need to call solved schema validateAsync to solve upper ref, then we can update sync status
               return s.validateAsync(in).compose(v -> {
@@ -111,7 +111,7 @@ public class RefSchema extends SchemaImpl {
           s -> {
             if (s == null) return Future.failedFuture(createException("Cannot resolve reference " + this.refPointer.toURI(), "$ref", null));
             registerCachedSchema(s);
-            if (log.isDebugEnabled()) log.debug("Solved ref {} as {} in ref schema {}", refPointer, s.getScope(), this.getScope());
+            if (log.isDebugEnabled()) log.debug(String.format("Solved ref %s as %s", refPointer, s.getScope()));
             if (s instanceof RefSchema) {
               // We need to call solved schema validateAsync to solve upper ref, then we can update sync status
               return ((RefSchema) s).trySolveSchema().map(s1 -> {

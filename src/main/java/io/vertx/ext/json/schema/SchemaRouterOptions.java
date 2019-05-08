@@ -8,7 +8,6 @@ import io.vertx.core.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
-@VertxGen
 @DataObject(generateConverter = true)
 public class SchemaRouterOptions {
 
@@ -21,11 +20,13 @@ public class SchemaRouterOptions {
   }
 
   public SchemaRouterOptions(JsonObject obj) {
-
+    SchemaRouterOptionsConverter.fromJson(obj, this);
   }
 
   public JsonObject toJson() {
-    return null;
+    JsonObject obj = new JsonObject();
+    SchemaRouterOptionsConverter.toJson(this, obj);
+    return obj;
   }
 
   @Fluent

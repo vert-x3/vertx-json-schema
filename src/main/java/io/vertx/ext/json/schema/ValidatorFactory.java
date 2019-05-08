@@ -4,7 +4,6 @@ import io.vertx.codegen.annotations.VertxGen;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 
-@VertxGen
 public interface ValidatorFactory {
   /**
    * This method consume the schema eventually creating a new {@link Validator}. The schema parser calls it during schema parsing only if {@link #canConsumeSchema(JsonObject)} returns true
