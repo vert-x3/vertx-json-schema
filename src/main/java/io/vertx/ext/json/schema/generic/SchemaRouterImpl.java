@@ -128,12 +128,15 @@ public class SchemaRouterImpl implements SchemaRouter {
       if (refURI.getPath() != null && !refURI.getPath().isEmpty()) {
         // Path pointer
         return Stream.concat(
-                getScopeParentAliases(scope).map(e -> URIUtils.resolvePath(e, refURI.getPath())),
-                Stream.of(getResourceAbsoluteURIFromClasspath(refURI))
+          Stream.of(
+            refURI,
+            getResourceAbsoluteURIFromClasspath(refURI)
+          ),
+          getScopeParentAliases(scope).map(e -> URIUtils.resolvePath(e, refURI.getPath()))
         )
-                .map(absolutePaths::get)
-                .filter(Objects::nonNull)
-                .findFirst();
+          .map(absolutePaths::get)
+          .filter(Objects::nonNull)
+          .findFirst();
       } else {
         // Fragment pointer, fallback to scope
         return Optional.ofNullable(absolutePaths.get(scope.getURIWithoutFragment()));
