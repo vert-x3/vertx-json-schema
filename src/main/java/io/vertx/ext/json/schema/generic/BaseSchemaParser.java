@@ -32,7 +32,6 @@ public abstract class BaseSchemaParser implements SchemaParser {
 
   @Override
   public Schema parse(Object jsonSchema, JsonPointer scope, MutableStateValidator parent) {
-    if (!scope.getURIWithoutFragment().isAbsolute()) throw new IllegalArgumentException("The scope provided must be absolute!");
     if (jsonSchema instanceof Map) jsonSchema = new JsonObject((Map<String, Object>) jsonSchema);
     if (jsonSchema instanceof JsonObject) {
       JsonObject json = (JsonObject) jsonSchema;
