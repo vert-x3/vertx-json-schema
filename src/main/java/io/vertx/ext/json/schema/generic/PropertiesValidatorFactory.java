@@ -233,7 +233,7 @@ public class PropertiesValidatorFactory implements ValidatorFactory {
 
     @Override
     public void applyDefaultValue(Object value) {
-      if (value instanceof JsonObject) {
+      if (value instanceof JsonObject && properties != null) {
         JsonObject obj = (JsonObject) value;
         for (Map.Entry<String, Schema> e : properties.entrySet()) {
           if (!obj.containsKey(e.getKey()) && e.getValue().hasDefaultValue()) {

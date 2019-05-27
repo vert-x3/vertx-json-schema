@@ -68,7 +68,7 @@ public class ValidationException extends VertxException {
         ", keyword='" + keyword + '\'' +
         ", input=" + input +
         ", schema=" + schema +
-        ", scope=" + scope +
+        ", scope=" + scope.toURI() +
         '}';
   }
 }

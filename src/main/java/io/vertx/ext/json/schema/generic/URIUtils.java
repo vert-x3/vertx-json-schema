@@ -37,7 +37,8 @@ public class URIUtils {
         String newInternalJarPath = URI.create(splittedJarURI[1]).resolve(path).toString();
         return new URI(oldURI.getScheme(), splittedJarURI[0] + "!" + newInternalJarPath, oldURI.getFragment());
       } else
-        return oldURI.resolve(path);
+        if (path.isEmpty()) return oldURI;
+        else return oldURI.resolve(path);
     } catch (URISyntaxException e) {
       e.printStackTrace();
       return null;

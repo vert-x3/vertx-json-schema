@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
 import io.vertx.ext.json.schema.openapi3.OpenAPI3SchemaParser;
+import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.BeforeEach;
@@ -102,6 +103,34 @@ public class SchemaRouterLocalRefTest {
       });
       context.completeNow();
     }));
+  }
+
+  @Test
+  public void localRecursiveRef(VertxTestContext context) {
+    Checkpoint check = context.checkpoint(2);
+
+    URI sampleURI = buildBaseUri("ref_test", "person_recursive.json");
+    JsonObject mainSchemaUnparsed = new JsonObject().put("$ref", sampleURI.toString());
+    Schema mainSchema = parser.parse(mainSchemaUnparsed, buildBaseUri("ref_test", "test_1.json"));
+    mainSchema.validateAsync(new JsonObject()
+      .put("name", "Francesco")
+      .put("surname", "Guardiani")
+      .put("id_card", "ABC")
+      .put("father", new JsonObject()
+        .put("name", "Pietro")
+        .put("surname", "Guardiani")
+        .put("id_card", "XYZ")
+      )
+    ).setHandler(context.succeeding(o -> check.flag()));
+    mainSchema.validateAsync(new JsonObject()
+      .put("name", "Francesco")
+      .put("surname", "Guardiani")
+      .put("id_card", "ABC")
+      .put("father", new JsonObject()
+        .put("name", "Pietro")
+        .put("surname", "Guardiani") // No id card!
+      )
+    ).setHandler(context.failing(o -> check.flag()));
   }
 
 }

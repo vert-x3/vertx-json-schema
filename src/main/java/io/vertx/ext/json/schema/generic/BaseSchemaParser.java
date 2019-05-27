@@ -1,5 +1,6 @@
 package io.vertx.ext.json.schema.generic;
 
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
@@ -82,9 +83,6 @@ public abstract class BaseSchemaParser implements SchemaParser {
 
   @Override
   public Schema parseSchemaFromString(String unparsedJson, JsonPointer scope, MutableStateValidator parent) {
-    String unparsedSchema = unparsedJson.trim();
-    if ("false".equals(unparsedSchema) || "true".equals(unparsedSchema))
-      return this.parse(Boolean.parseBoolean(unparsedSchema), scope, parent);
-    else return this.parse(new JsonObject(unparsedSchema), scope, parent);
+    return this.parse(Json.decodeValue(unparsedJson.trim()), scope, parent);
   }
 }

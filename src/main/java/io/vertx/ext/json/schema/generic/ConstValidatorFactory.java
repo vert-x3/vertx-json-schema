@@ -12,7 +12,7 @@ public class ConstValidatorFactory implements ValidatorFactory {
   @Override
   public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
       Object allowedValue = schema.getValue("const");
-      return new EnumValidator(allowedValue);
+      return new ConstValidator(allowedValue);
   }
 
   @Override
@@ -20,11 +20,11 @@ public class ConstValidatorFactory implements ValidatorFactory {
     return schema.containsKey("const");
   }
 
-  public class EnumValidator extends BaseSyncValidator {
+  public class ConstValidator extends BaseSyncValidator {
 
     private final Object allowedValue;
 
-    public EnumValidator(Object allowedValue) {
+    public ConstValidator(Object allowedValue) {
       this.allowedValue = allowedValue;
     }
 
@@ -35,10 +35,8 @@ public class ConstValidatorFactory implements ValidatorFactory {
 
     @Override
     public void validateSync(Object in) throws ValidationException {
-      if (allowedValue != null) {
-        if (!allowedValue.equals(in))
-          throw createException("Input doesn't match const: " + allowedValue, "const", in);
-      } else if (in != null) throw createException("Input doesn't match const: " + allowedValue, "const", in);
+      if (!ComparisonUtils.equalsNumberSafe(allowedValue, in))
+        throw createException("Input doesn't match const: " + allowedValue, "const", in);
     }
   }
 
