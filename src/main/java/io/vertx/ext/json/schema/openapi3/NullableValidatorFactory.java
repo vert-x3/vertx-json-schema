@@ -31,7 +31,7 @@ public class NullableValidatorFactory implements ValidatorFactory {
 
   @Override
   public boolean canConsumeSchema(JsonObject schema) {
-    return true;
+    return !schema.containsKey("$ref");
   }
 
 }

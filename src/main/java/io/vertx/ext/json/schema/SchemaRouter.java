@@ -6,9 +6,11 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.generic.SchemaRouterImpl;
 
+import java.net.URI;
 import java.util.List;
 
 public interface SchemaRouter {
@@ -44,6 +46,8 @@ public interface SchemaRouter {
    *
    */
   void addSchema(Schema schema);
+
+  void addJsonStructure(URI uri, JsonObject object);
 
   List<Schema> registeredSchemas();
 

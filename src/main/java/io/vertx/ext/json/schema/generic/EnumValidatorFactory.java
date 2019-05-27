@@ -40,10 +40,10 @@ public class EnumValidatorFactory implements ValidatorFactory {
   }
 
   public class EnumValidator extends BaseSyncValidator {
-    private final Set allowedValues;
+    private final Object[] allowedValues;
 
     public EnumValidator(Set allowedValues) {
-      this.allowedValues = allowedValues;
+      this.allowedValues = allowedValues.toArray();
     }
 
     @Override
@@ -53,7 +53,11 @@ public class EnumValidatorFactory implements ValidatorFactory {
 
     @Override
     public void validateSync(Object in) throws ValidationException {
-      if (!allowedValues.contains(in)) throw createException("Input doesn't match one of allowed values of enum: " + allowedValues, "enum", in);
+      for (int i = 0; i < allowedValues.length; i++) {
+        if (ComparisonUtils.equalsNumberSafe(allowedValues[i], in))
+          return;
+      }
+      throw createException("Input doesn't match one of allowed values of enum: " + allowedValues, "enum", in);
     }
   }
 

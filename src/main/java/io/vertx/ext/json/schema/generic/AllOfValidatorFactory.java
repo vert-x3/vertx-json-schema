@@ -42,7 +42,7 @@ public class AllOfValidatorFactory extends BaseCombinatorsValidatorFactory {
       return FutureUtils.andThen(
           CompositeFuture.all(Arrays.stream(schemas).map(s -> s.validateAsync(in)).collect(Collectors.toList())),
           res -> Future.succeededFuture(),
-          err -> Future.failedFuture(createException("allOf subschema don't match", "allOf", in, err)));
+        Future::failedFuture);
     }
   }
 

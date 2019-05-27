@@ -7,6 +7,8 @@ import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
 import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.json.Json;
+import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
 
@@ -20,6 +22,7 @@ import java.util.stream.Stream;
 public class SchemaRouterImpl implements SchemaRouter {
 
   private final Map<URI, RouterNode> absolutePaths;
+  private final Map<URI, Object> rootJsons;
   private final HttpClient client;
   private final FileSystem fs;
   private final Map<URI, ObservableFuture<Schema>> externalSchemasSolving;
@@ -28,7 +31,8 @@ public class SchemaRouterImpl implements SchemaRouter {
   public SchemaRouterImpl(HttpClient client, FileSystem fs, SchemaRouterOptions options) {
     this.client = client;
     this.fs = fs;
-    absolutePaths = new HashMap<>();
+    this.absolutePaths = new HashMap<>();
+    this.rootJsons = new HashMap<>();
     this.externalSchemasSolving = new ConcurrentHashMap<>();
     this.options = options;
   }
@@ -113,6 +117,11 @@ public class SchemaRouterImpl implements SchemaRouter {
     }
   }
 
+  @Override
+  public void addJsonStructure(URI uri, JsonObject object) {
+    this.rootJsons.put(uri, object);
+  }
+
   // The idea is to traverse from base to actual scope all tree and find aliases
   private Stream<URI> getScopeParentAliases(JsonPointer scope) {
     Stream.Builder<URI> uriStreamBuilder = Stream.builder();
@@ -128,11 +137,11 @@ public class SchemaRouterImpl implements SchemaRouter {
       if (refURI.getPath() != null && !refURI.getPath().isEmpty()) {
         // Path pointer
         return Stream.concat(
+          getScopeParentAliases(scope).map(e -> URIUtils.resolvePath(e, refURI.getPath())),
           Stream.of(
-            refURI,
-            getResourceAbsoluteURIFromClasspath(refURI)
-          ),
-          getScopeParentAliases(scope).map(e -> URIUtils.resolvePath(e, refURI.getPath()))
+            getResourceAbsoluteURIFromClasspath(refURI),
+            refURI
+          )
         )
           .map(absolutePaths::get)
           .filter(Objects::nonNull)
@@ -199,19 +208,38 @@ public class SchemaRouterImpl implements SchemaRouter {
             .map(u -> URIUtils.resolvePath(u, refURI.getPath()))
             .filter(u -> URIUtils.isRemoteURI(u) || URIUtils.isLocalURI(u)) // Remove aliases not resolvable
             .sorted((u1, u2) -> (URIUtils.isLocalURI(u1) && !URIUtils.isLocalURI(u2)) ? 1 : (u1.equals(u2)) ? 0 : -1), // Try to solve local refs before
-          Stream.of(getResourceAbsoluteURIFromClasspath(refURI)) // Last hope: try to solve as is
-        );
-      return ObservableFuture.wrap(
-          CompositeFuture.any(
-            candidatesURIs
-              .filter(Objects::nonNull)
-              .map(u ->
-                  ((URIUtils.isRemoteURI(u)) ? solveRemoteRef(u) : solveLocalRef(u))
-                      .map(s -> schemaParser.parseSchemaFromString(s, JsonPointer.fromURI(u)))
-              ).collect(Collectors.toList())
-          ).map(cf ->
-            resolveCachedSchema(pointer, scope, schemaParser)
+          Stream.of(
+            getResourceAbsoluteURIFromClasspath(refURI) // Last hope: try to solve from class loader
           )
+        );
+      URI uriToSolve = candidatesURIs
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElse(refURI); // REALLY Last hope: try to solve as is from file system
+
+      if (rootJsons.containsKey(uriToSolve)) { // Cached!
+        Object realLocation = pointer.queryJson(rootJsons.get(uriToSolve));
+        schemaParser.parse(
+          realLocation,
+          JsonPointer.fromURI(URIUtils.replaceFragment(uriToSolve, pointer.toString()))
+        );
+        return ObservableFuture.wrap(Future.succeededFuture(
+          resolveCachedSchema(pointer, scope, schemaParser)
+        ));
+
+      }
+      return ObservableFuture.wrap(
+        ((URIUtils.isRemoteURI(uriToSolve)) ? solveRemoteRef(uriToSolve) : solveLocalRef(uriToSolve))
+          .map(s -> {
+            Object root = Json.decodeValue(s.trim());
+            this.rootJsons.put(uriToSolve, root);
+            Object realSchema = pointer.queryJson(root);
+            schemaParser.parse(
+              realSchema,
+              JsonPointer.fromURI(URIUtils.replaceFragment(uriToSolve, pointer.toString()))
+            );
+            return resolveCachedSchema(pointer, scope, schemaParser);
+          })
       );
     });
   }
