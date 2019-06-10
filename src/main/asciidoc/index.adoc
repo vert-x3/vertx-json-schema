@@ -41,7 +41,7 @@ dependencies {
 === Schema
 
 Each parsed schema is represented by a {@link io.vertx.ext.json.schema.Schema} instance. A schema is a tree of {@link io.vertx.ext.json.schema.common.Validator} objects,
-where each one contains the necessary logic to perform the validation
+where each one contains the necessary logic to perform the validation. The performed validation is _fail-fast_: as soon as a validation error is encountered, the validation fails without going further
 
 === SchemaParser & SchemaRouter
 
