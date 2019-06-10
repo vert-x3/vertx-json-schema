@@ -1,8 +1,8 @@
 package io.vertx.ext.json.schema.draft7;
 
 import io.vertx.core.json.pointer.impl.JsonPointerImpl;
-import io.vertx.ext.json.schema.generic.BaseFormatValidatorFactory;
-import io.vertx.ext.json.schema.generic.RegularExpressions;
+import io.vertx.ext.json.schema.common.BaseFormatValidatorFactory;
+import io.vertx.ext.json.schema.common.RegularExpressions;
 
 import java.util.HashMap;
 import java.util.Map;

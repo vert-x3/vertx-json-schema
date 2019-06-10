@@ -5,7 +5,7 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseMutableStateValidator;
+import io.vertx.ext.json.schema.common.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +17,7 @@ import static io.vertx.ext.json.schema.ValidationException.createException;
 
 public class DependenciesValidatorFactory implements ValidatorFactory {
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       JsonObject dependencies = schema.getJsonObject("dependencies");
       JsonPointer baseScope = scope.copy().append("dependencies");

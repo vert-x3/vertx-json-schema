@@ -3,12 +3,12 @@ package io.vertx.ext.json.schema.draft7;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.json.schema.MutableStateValidator;
+import io.vertx.ext.json.schema.common.MutableStateValidator;
 import io.vertx.ext.json.schema.NoSyncValidationException;
 import io.vertx.ext.json.schema.ValidationException;
-import io.vertx.ext.json.schema.generic.BaseSingleSchemaValidator;
-import io.vertx.ext.json.schema.generic.BaseSingleSchemaValidatorFactory;
-import io.vertx.ext.json.schema.generic.FutureUtils;
+import io.vertx.ext.json.schema.common.BaseSingleSchemaValidator;
+import io.vertx.ext.json.schema.common.BaseSingleSchemaValidatorFactory;
+import io.vertx.ext.json.schema.common.FutureUtils;
 
 import java.util.stream.Collectors;
 

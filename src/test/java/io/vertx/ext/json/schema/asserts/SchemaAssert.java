@@ -1,7 +1,7 @@
 package io.vertx.ext.json.schema.asserts;
 
 import io.vertx.ext.json.schema.Schema;
-import io.vertx.ext.json.schema.generic.SchemaImpl;
+import io.vertx.ext.json.schema.common.SchemaImpl;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.StringAssert;
 

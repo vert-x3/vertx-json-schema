@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.json.schema.*;
 import io.vertx.ext.json.schema.draft7.Draft7SchemaParser;
+import io.vertx.ext.json.schema.common.SchemaParserInternal;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -34,8 +35,8 @@ public class CustomValidatorTests {
     URI u = buildBaseUri("custom", "properties_multiple_of.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser
-        .create(new SchemaParserOptions(), router)
+    SchemaParserInternal parser = Draft7SchemaParser
+        .create(router)
         .withValidatorFactory(new PropertiesMultipleOfValidatorFactory());
     Schema schema = parser.parse(obj, u);
 
@@ -67,8 +68,8 @@ public class CustomValidatorTests {
     URI u = buildBaseUri("custom", "async_with_ref.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser
-        .create(new SchemaParserOptions(), router)
+    SchemaParserInternal parser = Draft7SchemaParser
+        .create(router)
         .withValidatorFactory(new CachedAsyncEnumValidatorFactory(vertx));
     Schema schema = parser.parse(obj, u);
 
@@ -121,8 +122,8 @@ public class CustomValidatorTests {
       URI u = buildBaseUri("custom", "async_with_ref.json");
       JsonObject obj = loadJson(u);
       SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-      SchemaParser parser = Draft7SchemaParser
-          .create(new SchemaParserOptions(), router)
+      SchemaParserInternal parser = Draft7SchemaParser
+          .create(router)
           .withValidatorFactory(new AsyncEnumValidatorFactory(vertx));
       Schema schema = parser.parse(obj, u);
 

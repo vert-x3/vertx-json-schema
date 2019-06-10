@@ -8,6 +8,10 @@ import io.vertx.core.json.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents the options to resolve external schemas. You can configure auth options to access to external services
+ *
+ */
 @DataObject(generateConverter = true)
 public class SchemaRouterOptions {
 
@@ -29,12 +33,26 @@ public class SchemaRouterOptions {
     return obj;
   }
 
+  /**
+   * Put an header to authenticate requests while loading an external schema
+   *
+   * @param headerName
+   * @param headerValue
+   * @return
+   */
   @Fluent
   public SchemaRouterOptions putAuthHeader(String headerName, String headerValue) {
     authHeaders.put(headerName, headerValue);
     return this;
   }
 
+  /**
+   * Put a query parameter to authenticate requests while loading an external schema
+   *
+   * @param queryParamName
+   * @param queryParamValue
+   * @return
+   */
   @Fluent
   public SchemaRouterOptions putAuthQueryParam(String queryParamName, String queryParamValue) {
     authQueryParams.put(queryParamName, queryParamValue);

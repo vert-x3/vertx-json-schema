@@ -3,9 +3,9 @@ package io.vertx.ext.json.schema.draft7.dsl;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
-import io.vertx.ext.json.schema.generic.dsl.GenericSchemaBuilder;
-import io.vertx.ext.json.schema.generic.dsl.SchemaBuilder;
-import io.vertx.ext.json.schema.generic.dsl.SchemaType;
+import io.vertx.ext.json.schema.common.dsl.GenericSchemaBuilder;
+import io.vertx.ext.json.schema.common.dsl.SchemaBuilder;
+import io.vertx.ext.json.schema.common.dsl.SchemaType;
 import org.junit.jupiter.api.Test;
 
 import java.net.URI;
@@ -79,7 +79,7 @@ public class SchemaBuilderTest {
   public void testId() {
     assertThat(
         schema()
-            .id(URI.create("#/bla"))
+            .id(JsonPointer.fromURI(URI.create("#/bla")))
             .toJson()
     )
         .containsAllAndOnlyEntries(entry("$id", "#/bla"));

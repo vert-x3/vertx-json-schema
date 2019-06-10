@@ -3,7 +3,7 @@ package io.vertx.ext.json.schema.draft7;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.*;
+import io.vertx.ext.json.schema.common.*;
 
 import java.net.URI;
 import java.util.LinkedList;
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class Draft7SchemaParser extends BaseSchemaParser {
 
-  protected Draft7SchemaParser(SchemaParserOptions options, SchemaRouter router) {
-    super(options, router);
+  protected Draft7SchemaParser(SchemaRouter router) {
+    super(router);
   }
 
   @Override
@@ -53,12 +53,11 @@ public class Draft7SchemaParser extends BaseSchemaParser {
   /**
    * Instantiate a Draft7SchemaParser
    *
-   * @param options
-   * @param router
+   * @param router router to associate to read $ref
    * @return a new instance of Draft7SchemaParser
    */
-  public static Draft7SchemaParser create(SchemaParserOptions options, SchemaRouter router) {
-    return new Draft7SchemaParser(options, router);
+  public static Draft7SchemaParser create(SchemaRouter router) {
+    return new Draft7SchemaParser(router);
   }
 
   /**
@@ -71,6 +70,6 @@ public class Draft7SchemaParser extends BaseSchemaParser {
    * @throws io.vertx.ext.json.schema.SchemaException if schema is invalid
    */
   public static Schema parse(Vertx vertx, JsonObject schema, URI scope) {
-    return new Draft7SchemaParser(new SchemaParserOptions(), SchemaRouter.create(vertx, new SchemaRouterOptions())).parse(schema, scope);
+    return new Draft7SchemaParser(SchemaRouter.create(vertx, new SchemaRouterOptions())).parse(schema, scope);
   }
 }

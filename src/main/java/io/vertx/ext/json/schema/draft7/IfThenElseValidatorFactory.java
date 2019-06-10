@@ -4,14 +4,13 @@ import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseMutableStateValidator;
-import io.vertx.ext.json.schema.generic.FutureUtils;
+import io.vertx.ext.json.schema.common.*;
 
 import java.util.Map;
 
 public class IfThenElseValidatorFactory implements ValidatorFactory {
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser,  MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       IfThenElseValidator validator = new IfThenElseValidator(parent);
       Object conditionSchemaUnparsed = schema.getValue("if");

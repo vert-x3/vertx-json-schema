@@ -3,7 +3,7 @@ package io.vertx.ext.json.schema.asserts;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.SchemaParser;
 import io.vertx.ext.json.schema.SchemaRouter;
-import io.vertx.ext.json.schema.generic.SchemaImpl;
+import io.vertx.ext.json.schema.common.SchemaImpl;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Condition;
 

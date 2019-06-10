@@ -2,7 +2,7 @@ package io.vertx.ext.json.schema.draft7;
 
 import io.vertx.core.Vertx;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.SchemaRouterImpl;
+import io.vertx.ext.json.schema.common.SchemaRouterImpl;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -17,7 +17,7 @@ public class Draft7IntegrationTest extends BaseIntegrationTest {
 
   @Override
   public Map.Entry<SchemaParser, Schema> buildSchemaFunction(Vertx vertx, Object schema, String testFileName) {
-    SchemaParser parser = Draft7SchemaParser.create(new SchemaParserOptions(), new SchemaRouterImpl(vertx.createHttpClient(), vertx.fileSystem(), new SchemaRouterOptions()));
+    Draft7SchemaParser parser = Draft7SchemaParser.create(new SchemaRouterImpl(vertx.createHttpClient(), vertx.fileSystem(), new SchemaRouterOptions()));
     Schema s = parser.parse(schema, Paths.get(this.getTckPath() + "/" + testFileName + ".json").toAbsolutePath().toUri());
     return new AbstractMap.SimpleImmutableEntry<>(parser, s);
   }

@@ -6,17 +6,16 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseMutableStateValidator;
-import io.vertx.ext.json.schema.generic.ValidatorWithDefaultApply;
+import io.vertx.ext.json.schema.common.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ItemsValidatorFactory extends io.vertx.ext.json.schema.generic.ItemsValidatorFactory {
+public class ItemsValidatorFactory extends io.vertx.ext.json.schema.common.ItemsValidatorFactory {
 
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     Object itemsSchema = schema.getValue("items");
     if (itemsSchema instanceof JsonArray) {
       try {
@@ -107,9 +106,9 @@ public class ItemsValidatorFactory extends io.vertx.ext.json.schema.generic.Item
         for (int i = 0; i < arr.size(); i++) {
           if (i >= schemas.length) {
             if (additionalItems != null)
-              additionalItems.applyDefaultValues(arr.getValue(i));
+              ((SchemaImpl)additionalItems).doApplyDefaultValues(arr.getValue(i));
           } else
-            schemas[i].applyDefaultValues(arr.getValue(i));
+            ((SchemaImpl)schemas[i]).doApplyDefaultValues(arr.getValue(i));
         }
       }
     }

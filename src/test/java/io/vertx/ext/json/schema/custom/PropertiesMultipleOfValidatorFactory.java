@@ -3,13 +3,13 @@ package io.vertx.ext.json.schema.custom;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseSyncValidator;
+import io.vertx.ext.json.schema.common.*;
 
 import static io.vertx.ext.json.schema.ValidationException.createException;
 
 public class PropertiesMultipleOfValidatorFactory implements ValidatorFactory {
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       Number multipleOf = (Number) schema.getValue("propertiesMultipleOf");
       return new PropertiesMultipleOfValidator(multipleOf.intValue());

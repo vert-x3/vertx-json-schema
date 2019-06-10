@@ -3,7 +3,7 @@ package io.vertx.ext.json.schema.openapi3;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.*;
+import io.vertx.ext.json.schema.common.*;
 
 import java.net.URI;
 import java.util.LinkedList;
@@ -11,8 +11,8 @@ import java.util.List;
 
 public class OpenAPI3SchemaParser extends BaseSchemaParser {
 
-  protected OpenAPI3SchemaParser(SchemaParserOptions options, SchemaRouter router) {
-    super(options, router);
+  protected OpenAPI3SchemaParser(SchemaRouter router) {
+    super(router);
   }
 
   @Override
@@ -47,16 +47,15 @@ public class OpenAPI3SchemaParser extends BaseSchemaParser {
   /**
    * Instantiate an OpenAPI3SchemaParser
    *
-   * @param options
-   * @param router
+   * @param router router to associate to read $ref
    * @return a new instance of OpenAPI3SchemaParser
    */
-  public static OpenAPI3SchemaParser create(SchemaParserOptions options, SchemaRouter router) {
-    return new OpenAPI3SchemaParser(options, router);
+  public static OpenAPI3SchemaParser create(SchemaRouter router) {
+    return new OpenAPI3SchemaParser(router);
   }
 
   /**
-   * Parse a openapi 3 schema
+   * Parse an OpenAPI 3 schema
    *
    * @param vertx this vertx instance
    * @param schema parsed json schema
@@ -65,6 +64,6 @@ public class OpenAPI3SchemaParser extends BaseSchemaParser {
    * @throws io.vertx.ext.json.schema.SchemaException if schema is invalid
    */
   public static Schema parse(Vertx vertx, JsonObject schema, URI scope) {
-    return new OpenAPI3SchemaParser(new SchemaParserOptions(), SchemaRouter.create(vertx, new SchemaRouterOptions())).parse(schema, scope, null);
+    return new OpenAPI3SchemaParser(SchemaRouter.create(vertx, new SchemaRouterOptions())).parse(schema, scope, null);
   }
 }
