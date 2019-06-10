@@ -22,6 +22,11 @@ public class SchemaException extends VertxException {
     this.schema = schema;
   }
 
+  /**
+   * Json representation of the schema
+   *
+   * @return
+   */
   public Object schema() {
     return schema;
   }

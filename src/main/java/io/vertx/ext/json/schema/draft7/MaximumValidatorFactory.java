@@ -3,12 +3,12 @@ package io.vertx.ext.json.schema.draft7;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.MaximumValidator;
+import io.vertx.ext.json.schema.common.*;
 
 public class MaximumValidatorFactory implements ValidatorFactory {
 
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       Number maximum = (Number) schema.getValue("maximum");
       return new MaximumValidator(maximum.doubleValue());

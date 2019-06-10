@@ -5,6 +5,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.draft7.Draft7SchemaParser;
+import io.vertx.ext.json.schema.common.SchemaParserInternal;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -87,7 +88,7 @@ public class DefaultValuesApplyTest {
     URI u = buildBaseUri("default_test", "ref.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser.create(new SchemaParserOptions(), router);
+    SchemaParserInternal parser = Draft7SchemaParser.create(router);
     Schema schema = parser.parse(obj, u);
 
     router
@@ -112,7 +113,7 @@ public class DefaultValuesApplyTest {
     URI u = buildBaseUri("default_test", "circular_ref.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser.create(new SchemaParserOptions(), router);
+    SchemaParserInternal parser = Draft7SchemaParser.create(router);
     Schema schema = parser.parse(obj, u);
 
     router

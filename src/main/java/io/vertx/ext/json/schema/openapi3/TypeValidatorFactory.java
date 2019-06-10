@@ -3,15 +3,14 @@ package io.vertx.ext.json.schema.openapi3;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseSyncValidator;
-import io.vertx.ext.json.schema.generic.JsonSchemaType;
+import io.vertx.ext.json.schema.common.*;
 
 import static io.vertx.ext.json.schema.ValidationException.createException;
 
 public class TypeValidatorFactory implements ValidatorFactory {
 
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       String type = schema.getString("type");
       String format = schema.getString("format");

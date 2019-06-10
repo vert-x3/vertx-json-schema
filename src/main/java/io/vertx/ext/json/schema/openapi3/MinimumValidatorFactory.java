@@ -3,13 +3,12 @@ package io.vertx.ext.json.schema.openapi3;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.ExclusiveMinimumValidator;
-import io.vertx.ext.json.schema.generic.MinimumValidator;
+import io.vertx.ext.json.schema.common.*;
 
 public class MinimumValidatorFactory implements ValidatorFactory {
 
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       Number maximum = (Number) schema.getValue("minimum");
       if (schema.containsKey("exclusiveMinimum") && schema.getBoolean("exclusiveMinimum"))

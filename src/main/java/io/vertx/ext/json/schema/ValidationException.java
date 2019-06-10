@@ -37,18 +37,38 @@ public class ValidationException extends VertxException {
     return new ValidationException(message, keyword, input);
   }
 
+  /**
+   * Returns the keyword that failed the validation, if any
+   *
+   * @return
+   */
   @Nullable public String keyword() {
     return keyword;
   }
 
+  /**
+   * Returns the input that triggered the error
+   *
+   * @return
+   */
   public Object input() {
     return input;
   }
 
+  /**
+   * Returns the schema that failed the validation
+   *
+   * @return
+   */
   public Schema schema() {
     return schema;
   }
 
+  /**
+   * Returns the scope of the schema that failed the validation
+   *
+   * @return
+   */
   public JsonPointer scope() {
     return scope;
   }
@@ -68,7 +88,7 @@ public class ValidationException extends VertxException {
         ", keyword='" + keyword + '\'' +
         ", input=" + input +
         ", schema=" + schema +
-        ", scope=" + scope.toURI() +
+        ((scope != null) ? ", scope=" + scope.toURI() : "") +
         '}';
   }
 }

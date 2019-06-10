@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
 import io.vertx.ext.json.schema.*;
-import io.vertx.ext.json.schema.generic.BaseMutableStateValidator;
+import io.vertx.ext.json.schema.common.*;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,7 +22,7 @@ public class CachedAsyncEnumValidatorFactory implements ValidatorFactory {
   }
 
   @Override
-  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParser parser, MutableStateValidator parent) {
+  public Validator createValidator(JsonObject schema, JsonPointer scope, SchemaParserInternal parser, MutableStateValidator parent) {
     try {
       String address = (String) schema.getValue("asyncEnum");
       return new CachedAsyncEnumValidator(vertx, address, parent);

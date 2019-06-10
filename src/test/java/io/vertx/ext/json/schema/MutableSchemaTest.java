@@ -4,6 +4,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.json.schema.draft7.Draft7SchemaParser;
+import io.vertx.ext.json.schema.common.SchemaParserInternal;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
 import org.junit.jupiter.api.Test;
@@ -63,7 +64,7 @@ public class MutableSchemaTest {
     URI u = buildBaseUri("mutable_schema_test", "async_ref_1.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser.create(new SchemaParserOptions(), router);
+    SchemaParserInternal parser = Draft7SchemaParser.create(router);
     Schema schema = parser.parse(obj, u);
 
     assertThat(schema).isAsync();
@@ -94,7 +95,7 @@ public class MutableSchemaTest {
     URI u = buildBaseUri("mutable_schema_test", "circular.json");
     JsonObject obj = loadJson(u);
     SchemaRouter router = SchemaRouter.create(vertx, new SchemaRouterOptions());
-    SchemaParser parser = Draft7SchemaParser.create(new SchemaParserOptions(), router);
+    SchemaParserInternal parser = Draft7SchemaParser.create(router);
     Schema schema = parser.parse(obj, u);
 
     assertThat(schema).isAsync();
