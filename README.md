@@ -2,15 +2,6 @@
 
 [![Build Status](https://travis-ci.org/vert-x3/vertx-json-schema.svg?branch=master)](https://travis-ci.org/vert-x3/vertx-json-schema)
 
-This validator should be:
-
-* Fail fast
-* Keyword based
-* Should support both OpenAPI 3 and draft-7
-* Should support both sync and async validation
-* Don't apply default values
-* Number formats are ignored
-
 ## Architecture
 
 * `SchemaParser`: Parses the schemas. It can be used to parse various schemas. Every JSON Schema dialect/version has one
@@ -37,11 +28,3 @@ Future validationResult = schema.validateAsync(objectToValidate);
 
 ## Extend the validator
 To support custom keywords, you can create a new `ValidatorFactory` and register to a `SchemaParser` with `SchemaParserOptions.putAdditionalValidatorFactory()`
-
-## TODO
-
-* Align logging to vertx official packages
-* Write documentation
-* Javadocs of io.vertx.ext.json interfaces
-* Enable vertx codegen
-* Schema keyword

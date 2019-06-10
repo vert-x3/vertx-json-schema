@@ -1,6 +1,7 @@
 package io.vertx.ext.json.schema.common.dsl;
 
 import io.vertx.codegen.annotations.Fluent;
+import io.vertx.codegen.annotations.GenIgnore;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.pointer.JsonPointer;
@@ -13,6 +14,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * Entry point for schema dsl. Look at the doc for more info
+ *
+ * @param <T>
+ * @param <K>
+ */
 public abstract class SchemaBuilder<T extends SchemaBuilder<?, ?>, K extends Keyword> {
 
     protected SchemaType type;
@@ -42,8 +49,14 @@ public abstract class SchemaBuilder<T extends SchemaBuilder<?, ?>, K extends Key
         return self;
     }
 
+  @Fluent
+  public T with(K keyword) {
+    this.keywords.put(keyword.getKeyword(), keyword.getValueSupplier());
+    return self;
+  }
+
     @Fluent
-    public T with(K... keywords) { //TODO choose another cooler name
+    public T with(K... keywords) {
         for (Keyword k: keywords) {
             this.keywords.put(k.getKeyword(), k.getValueSupplier());
         }
