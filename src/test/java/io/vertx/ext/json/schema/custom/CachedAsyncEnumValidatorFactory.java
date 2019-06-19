@@ -1,6 +1,7 @@
 package io.vertx.ext.json.schema.custom;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -64,18 +65,18 @@ public class CachedAsyncEnumValidatorFactory implements ValidatorFactory {
     @Override
     public Future<Void> validateAsync(Object in) {
       if (isSync()) return validateSyncAsAsync(in);
-      Future<Void> fut = Future.future();
-      vertx.eventBus().send(address, new JsonObject(), ar -> {
+      Promise<Void> promise = Promise.promise();
+      vertx.eventBus().request(address, new JsonObject(), ar -> {
         JsonArray enumValues = (JsonArray) ar.result().body();
 
         // Write cache
         this.cache.set(Optional.of(enumValues));
         this.triggerUpdateIsSync();
 
-        if (!enumValues.contains(in)) fut.fail(createException("Not matching async enum", "asyncEnum", in));
-        else fut.complete();
+        if (!enumValues.contains(in)) promise.fail(createException("Not matching async enum", "asyncEnum", in));
+        else promise.complete();
       });
-      return fut;
+      return promise.future();
     }
 
     @Override
