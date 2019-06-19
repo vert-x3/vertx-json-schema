@@ -1,6 +1,7 @@
 package examples;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -20,15 +21,15 @@ class AsyncEnumValidator extends BaseAsyncValidator {
 
   @Override
   public Future<Void> validateAsync(Object in) {
-    Future<Void> fut = Future.future();
+    Promise<Void> promise = Promise.promise();
     // Retrieve the valid values from the event bus
-    vertx.eventBus().send(address, new JsonObject(), ar -> {
+    vertx.eventBus().request(address, new JsonObject(), ar -> {
       JsonArray enumValues = (JsonArray) ar.result().body();
       if (!enumValues.contains(in))
-        fut.fail(createException("Not matching async enum " + enumValues, "asyncEnum", in));
+        promise.fail(createException("Not matching async enum " + enumValues, "asyncEnum", in));
       else
-        fut.complete();
+        promise.complete();
     });
-    return fut;
+    return promise.future();
   }
 }

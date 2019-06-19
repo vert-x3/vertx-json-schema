@@ -3,6 +3,7 @@ package io.vertx.ext.json.schema.common;
 import io.netty.handler.codec.http.QueryStringEncoder;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.file.FileSystem;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientRequest;
@@ -159,7 +160,7 @@ public class SchemaRouterImpl implements SchemaRouter {
   }
 
   private Future<String> solveRemoteRef(final URI ref) {
-    Future<String> fut = Future.future();
+    Promise<String> promise = Promise.promise();
     String uri = ref.toString();
     if (!options.getAuthQueryParams().isEmpty()) {
       QueryStringEncoder encoder = new QueryStringEncoder(uri);
@@ -168,34 +169,34 @@ public class SchemaRouterImpl implements SchemaRouter {
     }
     HttpClientRequest req = client.getAbs(uri, ar -> {
       if (ar.failed()) {
-        fut.fail(ar.cause());
+        promise.fail(ar.cause());
         return;
       }
-      ar.result().exceptionHandler(fut::fail);
+      ar.result().exceptionHandler(promise::fail);
       if (ar.result().statusCode() == 200) {
         ar.result().bodyHandler(buf -> {
-          fut.complete(buf.toString());
+          promise.complete(buf.toString());
         });
       } else {
-        fut.fail(new IllegalStateException("Wrong status code " + ar.result().statusCode() + " " + ar.result().statusMessage() + " received while resolving remote ref"));
+        promise.fail(new IllegalStateException("Wrong status code " + ar.result().statusCode() + " " + ar.result().statusMessage() + " received while resolving remote ref"));
       }
     }).putHeader(HttpHeaders.ACCEPT.toString(), "application/json, application/schema+json");
     options.getAuthHeaders().forEach(req::putHeader);
     req.end();
-    return fut;
+    return promise.future();
   }
 
   private Future<String> solveLocalRef(final URI ref) {
-    Future<String> fut = Future.future();
+    Promise<String> promise = Promise.promise();
     String filePath = ("jar".equals(ref.getScheme())) ? ref.getSchemeSpecificPart().split("!")[1].substring(1) : ref.getPath();
     fs.readFile(filePath, res -> {
       if (res.succeeded()) {
-        fut.complete(res.result().toString());
+        promise.complete(res.result().toString());
       } else {
-        fut.fail(res.cause());
+        promise.fail(res.cause());
       }
     });
-    return fut;
+    return promise.future();
   }
 
   private ObservableFuture<Schema> resolveExternalRef(final JsonPointer pointer, final JsonPointer scope, final SchemaParser schemaParser) {

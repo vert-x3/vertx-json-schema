@@ -1,6 +1,7 @@
 package io.vertx.ext.json.schema.common;
 
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
 import io.vertx.junit5.Checkpoint;
 import io.vertx.junit5.VertxExtension;
@@ -52,8 +53,8 @@ public class ObservableFutureTest {
   @Test
   public void testCompletedFuture(VertxTestContext context) {
     Vertx vertx = Vertx.vertx();
-    Future<String> fut = Future.future();
-    ObservableFuture<String> multiFuture = ObservableFuture.wrap(fut);
+    Promise<String> fut = Promise.promise();
+    ObservableFuture<String> multiFuture = ObservableFuture.wrap(fut.future());
 
     Checkpoint checkpoint = context.checkpoint(2);
 
@@ -72,8 +73,8 @@ public class ObservableFutureTest {
   @Test
   public void testFailedFuture(VertxTestContext context) {
     Vertx vertx = Vertx.vertx();
-    Future<String> fut = Future.future();
-    ObservableFuture<String> multiFuture = ObservableFuture.wrap(fut);
+    Promise<String> fut = Promise.promise();
+    ObservableFuture<String> multiFuture = ObservableFuture.wrap(fut.future());
 
     Checkpoint checkpoint = context.checkpoint(2);
 

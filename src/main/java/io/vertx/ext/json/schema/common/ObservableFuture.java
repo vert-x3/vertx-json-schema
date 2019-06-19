@@ -42,46 +42,6 @@ public class ObservableFuture<T> implements Future<T> {
   }
 
   @Override
-  public void complete(T result) {
-    delegate.complete(result);
-  }
-
-  @Override
-  public void complete() {
-    delegate.complete();
-  }
-
-  @Override
-  public void fail(Throwable cause) {
-    delegate.fail(cause);
-  }
-
-  @Override
-  public void fail(String failureMessage) {
-    delegate.fail(failureMessage);
-  }
-
-  @Override
-  public boolean tryComplete(T result) {
-    return delegate.tryComplete(result);
-  }
-
-  @Override
-  public boolean tryComplete() {
-    return delegate.tryComplete();
-  }
-
-  @Override
-  public boolean tryFail(Throwable cause) {
-    return delegate.tryFail(cause);
-  }
-
-  @Override
-  public boolean tryFail(String failureMessage) {
-    return delegate.tryFail(failureMessage);
-  }
-
-  @Override
   public T result() {
     return delegate.result();
   }
@@ -99,11 +59,6 @@ public class ObservableFuture<T> implements Future<T> {
   @Override
   public boolean failed() {
     return delegate.failed();
-  }
-
-  @Override
-  public void handle(AsyncResult<T> asyncResult) {
-    delegate.handle(asyncResult);
   }
 
   public static <T> ObservableFuture<T> wrap(Future<T> fut) {
