@@ -26,7 +26,7 @@ public class SchemaRouterImpl implements SchemaRouter {
   private final Map<URI, Object> rootJsons;
   private final HttpClient client;
   private final FileSystem fs;
-  private final Map<URI, ObservableFuture<Schema>> externalSchemasSolving;
+  private final Map<URI, Future<Schema>> externalSchemasSolving;
   private final SchemaRouterOptions options;
 
   public SchemaRouterImpl(HttpClient client, FileSystem fs, SchemaRouterOptions options) {
@@ -199,7 +199,7 @@ public class SchemaRouterImpl implements SchemaRouter {
     return promise.future();
   }
 
-  private ObservableFuture<Schema> resolveExternalRef(final JsonPointer pointer, final JsonPointer scope, final SchemaParser schemaParser) {
+  private Future<Schema> resolveExternalRef(final JsonPointer pointer, final JsonPointer scope, final SchemaParser schemaParser) {
     URI refURI = pointer.getURIWithoutFragment();
     return externalSchemasSolving.computeIfAbsent(refURI, (r) -> {
       Stream<URI> candidatesURIs;
@@ -226,12 +226,9 @@ public class SchemaRouterImpl implements SchemaRouter {
           realLocation,
           JsonPointer.fromURI(URIUtils.replaceFragment(uriToSolve, pointer.toString()))
         );
-        return ObservableFuture.wrap(Future.succeededFuture(
-          resolveCachedSchema(pointer, scope, schemaParser)
-        ));
-
+        return Future.succeededFuture(resolveCachedSchema(pointer, scope, schemaParser));
       }
-      return ObservableFuture.wrap(
+      return
         ((URIUtils.isRemoteURI(uriToSolve)) ? solveRemoteRef(uriToSolve) : solveLocalRef(uriToSolve))
           .map(s -> {
             Object root = Json.decodeValue(s.trim());
@@ -242,8 +239,7 @@ public class SchemaRouterImpl implements SchemaRouter {
               JsonPointer.fromURI(URIUtils.replaceFragment(uriToSolve, pointer.toString()))
             );
             return resolveCachedSchema(pointer, scope, schemaParser);
-          })
-      );
+          });
     });
   }
 

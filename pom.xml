@@ -32,6 +32,7 @@
 
   <properties>
     <stack.version>4.0.0-SNAPSHOT</stack.version>
+    <junit5.version>5.5.2</junit5.version>
     <doc.skip>true</doc.skip>
   </properties>
 
@@ -84,8 +85,14 @@
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <version>5.4.2</version>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit5.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit5.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -140,7 +147,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M3</version>
+        <version>3.0.0-M4</version>
         <configuration>
           <trimStackTrace>false</trimStackTrace>
           <additionalClasspathElements>
