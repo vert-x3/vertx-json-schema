@@ -180,7 +180,9 @@ public class SchemaRouterImpl implements SchemaRouter {
       } else {
         promise.fail(new IllegalStateException("Wrong status code " + ar.result().statusCode() + " " + ar.result().statusMessage() + " received while resolving remote ref"));
       }
-    }).putHeader(HttpHeaders.ACCEPT.toString(), "application/json, application/schema+json");
+    })
+      .setFollowRedirects(true)
+      .putHeader(HttpHeaders.ACCEPT.toString(), "application/json, application/schema+json");
     options.getAuthHeaders().forEach(req::putHeader);
     req.end();
     return promise.future();
