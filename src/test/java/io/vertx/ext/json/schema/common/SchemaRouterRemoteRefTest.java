@@ -9,6 +9,8 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.auth.AbstractUser;
 import io.vertx.ext.auth.AuthProvider;
+import io.vertx.ext.auth.User;
+import io.vertx.ext.auth.authorization.Authorization;
 import io.vertx.ext.json.schema.*;
 import io.vertx.ext.json.schema.draft7.Draft7SchemaParser;
 import io.vertx.ext.web.Route;
@@ -48,20 +50,7 @@ public class SchemaRouterRemoteRefTest {
 
   private static final Handler<RoutingContext> headerAuthMock = BasicAuthHandler.create((jsonObject, handler) -> {
     if ("francesco".equals(jsonObject.getString("username")) && "slinky".equals(jsonObject.getString("password")))
-      handler.handle(Future.succeededFuture(new AbstractUser() {
-        @Override
-        protected void doIsPermitted(String s, Handler<AsyncResult<Boolean>> handler) {
-          handler.handle(Future.succeededFuture(true));
-        }
-
-        @Override
-        public JsonObject principal() {
-          return jsonObject;
-        }
-
-        @Override
-        public void setAuthProvider(AuthProvider authProvider) { }
-      }));
+      handler.handle(Future.succeededFuture(User.create(new JsonObject())));
     else
       handler.handle(Future.failedFuture("Not match"));
   });
